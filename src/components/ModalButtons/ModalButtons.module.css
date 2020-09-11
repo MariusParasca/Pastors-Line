@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.closeButton {
+  background: #fff;
+  border: 2px solid #46139f;
+  color: #46139f;
+}
+
+.closeButton:hover {
+  border: 2px solid #2a0c5e;
+  background: #fff;
+  color: #46139f;
+}
