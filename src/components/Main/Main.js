@@ -2,13 +2,19 @@ import React, { useCallback, useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 import ModalContainer from 'components/ModalContainer/ModalContainer';
+import ModalButtons from 'components/ModalButtons/ModalButtons';
 import styles from './Main.module.css';
 
 const Main = () => {
   const [isModalAOpen, setIsModalAOpen] = useState(false);
   const [isModalBOpen, setIsModalBOpen] = useState(false);
 
-  const toggleIsModalOpen = useCallback(() => (state, setState) => setState(!state), []);
+  const toggleIsModalOpen = useCallback((setState, state) => () => setState(!state), []);
+
+  const closeAllModals = useCallback(() => {
+    setIsModalAOpen(false);
+    setIsModalBOpen(false);
+  }, []);
 
   return (
     <>
@@ -17,15 +23,20 @@ const Main = () => {
           className={styles.firstButton}
           variant="primary"
           size="lg"
-          onClick={toggleIsModalOpen(isModalAOpen, setIsModalAOpen)}
+          onClick={toggleIsModalOpen(setIsModalAOpen, isModalAOpen)}
         >
           Button A
         </Button>
-        <Button variant="secondary" size="lg" onClick={toggleIsModalOpen(isModalBOpen, setIsModalBOpen)}>
+        <Button variant="secondary" size="lg" onClick={toggleIsModalOpen(setIsModalBOpen, isModalBOpen)}>
           Button B
         </Button>
+        <ModalContainer open={isModalAOpen} onClose={closeAllModals}>
+          <ModalButtons />
+        </ModalContainer>
+        <ModalContainer open={isModalBOpen} onClose={closeAllModals}>
+          <ModalButtons />
+        </ModalContainer>
       </div>
-      <ModalContainer />
     </>
   );
 };
