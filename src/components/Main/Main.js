@@ -6,6 +6,9 @@ import { useDispatch } from 'react-redux';
 import { FETCH_CONTACTS_SEND, RESET_CONTACTS } from 'store/actionTypes/contacts';
 import styles from './Main.module.css';
 
+// I didn't changed the URL on modal openings because I do not see the logic in it...
+/// If I could get the opportunity to answer questions
+
 const Main = () => {
   const [isModalAOpen, setIsModalAOpen] = useState(false);
   const [isModalBOpen, setIsModalBOpen] = useState(false);
