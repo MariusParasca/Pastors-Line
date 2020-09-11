@@ -12,10 +12,10 @@ const ModalButtons = (props) => {
       <Button variant="primary" size="lg" onClick={onClickFirstButton}>
         All Contacts
       </Button>
-      <Button variant="primary" size="lg" onClick={onClickSecondButton}>
+      <Button variant="secondary" size="lg" onClick={onClickSecondButton}>
         US Contacts
       </Button>
-      <Button variant="primary" size="lg" onClick={onClickThirdButton}>
+      <Button className={styles.closeButton} size="lg" onClick={onClickThirdButton}>
         Close
       </Button>
     </div>

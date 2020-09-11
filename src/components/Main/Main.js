@@ -1,18 +1,30 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, ListGroup } from 'react-bootstrap';
 
-import ModalContainer from 'components/ModalContainer/ModalContainer';
+import ModalContacts from 'components/ModalContacts/ModalContacts';
 import ModalButtons from 'components/ModalButtons/ModalButtons';
-import customAxios from 'customaxios/axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { FETCH_CONTACTS_SEND } from 'store/actionTypes/contacts';
 import styles from './Main.module.css';
 
 const Main = () => {
   const [isModalAOpen, setIsModalAOpen] = useState(false);
   const [isModalBOpen, setIsModalBOpen] = useState(false);
 
-  const [allCountriesContacts, setAllCountriesContacts] = useState([]);
+  const dispatch = useDispatch();
+  const contactsRedux = useSelector((state) => state.contacts);
 
   const toggleIsModalOpen = useCallback((setState, state) => () => setState(!state), []);
+
+  const closeModalAOpenB = useCallback(() => {
+    setIsModalAOpen(false);
+    setIsModalBOpen(true);
+  }, []);
+
+  const closeModalBOpenA = useCallback(() => {
+    setIsModalAOpen(true);
+    setIsModalBOpen(false);
+  }, []);
 
   const closeAllModals = useCallback(() => {
     setIsModalAOpen(false);
@@ -21,18 +33,17 @@ const Main = () => {
 
   useEffect(() => {
     if (isModalAOpen) {
-      customAxios
-        .get('/contacts.json', {
-          params: {
-            companyId: 171,
-          },
-        })
-        .then((response) => {
-          console.log('response.data.contacts', response.data.contacts);
-          setAllCountriesContacts(response.data.contacts);
-        });
+      dispatch({ type: FETCH_CONTACTS_SEND, queryParams: { companyId: 171 } });
     }
-  }, [isModalAOpen]);
+  }, [dispatch, isModalAOpen]);
+
+  useEffect(() => {
+    if (isModalBOpen) {
+      dispatch({ type: FETCH_CONTACTS_SEND, queryParams: { companyId: 171, countryId: 226 } });
+    }
+  }, [dispatch, isModalBOpen]);
+
+  console.log('contactsRedux', contactsRedux);
 
   return (
     <>
@@ -48,27 +59,22 @@ const Main = () => {
         <Button variant="secondary" size="lg" onClick={toggleIsModalOpen(setIsModalBOpen, isModalBOpen)}>
           Button B
         </Button>
-        <ModalContainer open={isModalAOpen} onClose={closeAllModals}>
-          <ListGroup defaultActiveKey="#link1">
-            {allCountriesContacts.map((contact) => (
-              <ListGroup.Item action href="#link1">
-                {contact.first_name} {contact.last_name}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-          <ModalButtons
-            onClickFirstButton={toggleIsModalOpen(setIsModalAOpen, false)}
-            onClickSecondButton={toggleIsModalOpen(setIsModalBOpen, false)}
-            onClickThirdButton={closeAllModals}
-          />
-        </ModalContainer>
-        <ModalContainer open={isModalBOpen} onClose={closeAllModals}>
-          <ModalButtons
-            onClickFirstButton={toggleIsModalOpen(setIsModalAOpen, false)}
-            onClickSecondButton={toggleIsModalOpen(setIsModalBOpen, false)}
-            onClickThirdButton={closeAllModals}
-          />
-        </ModalContainer>
+        <ModalContacts
+          key="allContacts"
+          open={isModalAOpen}
+          onClose={closeAllModals}
+          onClickFirstButton={closeModalBOpenA}
+          onClickSecondButton={closeModalAOpenB}
+          onClickThirdButton={closeAllModals}
+        />
+        <ModalContacts
+          kye="UsContacts"
+          open={isModalBOpen}
+          onClose={closeAllModals}
+          onClickFirstButton={closeModalBOpenA}
+          onClickSecondButton={closeModalAOpenB}
+          onClickThirdButton={closeAllModals}
+        />
       </div>
     </>
   );

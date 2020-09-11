@@ -1,0 +1,16 @@
+.footer {
+  justify-content: flex-start;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.body {
+  max-height: 400px;
+  min-height: 400px;
+  overflow: auto;
+  width: 100%;
+}
