@@ -1,5 +1,3 @@
-import { transformObjectToArray } from './helpers';
-
 export function createCommonAPIReducer(state, action, prefix, actionDataProp, newStateDataPropName) {
   if (!state && !action && !prefix) throw new TypeError('state, action and prefix need to be provided');
 
@@ -10,7 +8,8 @@ export function createCommonAPIReducer(state, action, prefix, actionDataProp, ne
       newState.pending = true;
       break;
     case `${prefix}_DONE`:
-      newState[newStateDataPropName] = transformObjectToArray(action.data[actionDataProp]);
+      newState[newStateDataPropName] = action.data[actionDataProp];
+      newState[`${newStateDataPropName}Ids`] = action.data[`${newStateDataPropName}_ids`];
       newState.error = null;
       newState.pending = false;
       newState.pagination = {
@@ -37,9 +36,13 @@ export function createMoreAPIReducer(state, action, prefix, actionDataProp, newS
       newState.pendingMore = true;
       break;
     case `${prefix}_DONE`:
-      newState[newStateDataPropName] = [
+      newState[newStateDataPropName] = {
         ...newState[newStateDataPropName],
-        ...transformObjectToArray(action.data[actionDataProp]),
+        ...action.data[actionDataProp],
+      };
+      newState[`${newStateDataPropName}Ids`] = [
+        ...newState[`${newStateDataPropName}Ids`],
+        ...action.data[`${newStateDataPropName}_ids`],
       ];
       newState.error = null;
       newState.pendingMore = false;

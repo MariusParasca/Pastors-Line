@@ -3,6 +3,7 @@ import { createCommonAPIReducer, createMoreAPIReducer } from 'utils/reducerHelpe
 
 const initialState = {
   contacts: [],
+  contactsIds: [],
   moreContacts: [],
   error: null,
   pending: false,

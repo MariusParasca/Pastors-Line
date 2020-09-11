@@ -23,7 +23,7 @@
 }
 
 .contactModal {
-  height: 510px;
+  height: 560px;
 }
 
 .listItem {
@@ -32,4 +32,8 @@
 
 .listItem:hover {
   background: #f1f1f1;
+}
+
+.searchContainer {
+  margin-top: 20px;
 }

@@ -11,13 +11,3 @@ export async function fetchFromAPI(url, options = { queryParams: {} }) {
     return { error };
   }
 }
-
-export function transformObjectToArray(object) {
-  const array = [];
-  for (const property in object) {
-    if (Object.prototype.hasOwnProperty.call(object, property)) {
-      array.push(object[property]);
-    }
-  }
-  return array;
-}
