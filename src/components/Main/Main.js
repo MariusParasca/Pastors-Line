@@ -16,16 +16,20 @@ const Main = () => {
   const toggleIsModalOpen = useCallback((setState, state) => () => setState(!state), []);
 
   const closeModalAOpenB = useCallback(() => {
-    setIsModalAOpen(false);
-    setIsModalBOpen(true);
-    dispatch({ type: RESET_CONTACTS });
-  }, [dispatch]);
+    if (isModalAOpen) {
+      setIsModalAOpen(false);
+      setIsModalBOpen(true);
+      dispatch({ type: RESET_CONTACTS });
+    }
+  }, [dispatch, isModalAOpen]);
 
   const closeModalBOpenA = useCallback(() => {
-    setIsModalAOpen(true);
-    setIsModalBOpen(false);
-    dispatch({ type: RESET_CONTACTS });
-  }, [dispatch]);
+    if (isModalBOpen) {
+      setIsModalAOpen(true);
+      setIsModalBOpen(false);
+      dispatch({ type: RESET_CONTACTS });
+    }
+  }, [dispatch, isModalBOpen]);
 
   const closeAllModals = useCallback(() => {
     setIsModalAOpen(false);

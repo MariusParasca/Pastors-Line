@@ -9,18 +9,20 @@ import ModalButtons from 'components/ModalButtons/ModalButtons';
 import { FETCH_MORE_CONTACTS_SEND } from 'store/actionTypes/contacts';
 import styles from './ModalContacts.module.css';
 
-const getListItems = (contacts, isEven) => {
+const getListItems = (contacts, isEven, onClick) => {
   const items = [];
-  for (const contact of contacts) {
+  for (let i = 0; i < contacts.length; i += 1) {
+    const contact = contacts[i];
+
     if (isEven && Number(contact.id) % 2 === 0 && (contact.last_name || contact.first_name)) {
       items.push(
-        <ListGroup.Item key={contact.id}>
+        <ListGroup.Item key={contact.id} onClick={onClick(i)} className={styles.listItem}>
           {contact.first_name} {contact.last_name}
         </ListGroup.Item>,
       );
     } else if (!isEven && (contact.last_name || contact.first_name)) {
       items.push(
-        <ListGroup.Item key={contact.id}>
+        <ListGroup.Item key={contact.id} onClick={onClick(i)} className={styles.listItem}>
           {contact.first_name} {contact.last_name}
         </ListGroup.Item>,
       );
@@ -35,13 +37,23 @@ const ModalContainer = (props) => {
 
   const [isEvenCheck, setIsEvenCheck] = useState(false);
   const [listItems, setListItems] = useState([]);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [contactIndex, setContactIndex] = useState(0);
 
   const contactsRedux = useSelector((state) => state.contacts);
   const dispatch = useDispatch();
 
+  const onClickContact = useCallback(
+    (i) => () => {
+      setIsContactModalOpen(true);
+      setContactIndex(i);
+    },
+    [],
+  );
+
   useEffect(() => {
-    setListItems(getListItems(contactsRedux.contacts, isEvenCheck));
-  }, [contactsRedux.contacts, isEvenCheck]);
+    setListItems(getListItems(contactsRedux.contacts, isEvenCheck, onClickContact));
+  }, [contactsRedux.contacts, isEvenCheck, onClickContact]);
 
   const toggleEvenCheck = useCallback(() => {
     setIsEvenCheck(!isEvenCheck);
@@ -54,49 +66,64 @@ const ModalContainer = (props) => {
     });
   }, [contactsRedux.pagination.page, dispatch, queryParams]);
 
+  const closeContactModal = useCallback(() => {
+    setIsContactModalOpen(false);
+  }, []);
+
   return (
-    <Modal show={open} onHide={onClose} backdrop="static">
-      <Modal.Body>
-        <ModalButtons
-          onClickFirstButton={onClickFirstButton}
-          onClickSecondButton={onClickSecondButton}
-          onClickThirdButton={onClickThirdButton}
-        />
-        <div className={styles.container}>
-          {contactsRedux.pending ? (
-            <Spinner animation="border" />
-          ) : (
-            <ListGroup id="listGroup" className={styles.body}>
-              <InfiniteScroll
-                scrollableTarget="listGroup"
-                dataLength={contactsRedux.contacts.length}
-                loader={
-                  contactsRedux.pendingMore ? (
-                    <div className={styles.spinnerContainer}>
-                      <Spinner animation="border" />
-                    </div>
-                  ) : null
-                }
-                hasMore={contactsRedux.contacts.length < contactsRedux.pagination.maxItems}
-                next={fetchMoreContacts}
-                style={{ overflow: false }}
-              >
-                {listItems}
-              </InfiniteScroll>
-            </ListGroup>
-          )}
-        </div>
-      </Modal.Body>
-      <Modal.Footer className={styles.footer}>
-        <Form.Check
-          disabled={contactsRedux.pending || contactsRedux.pendingMore}
-          type="checkbox"
-          label="Only even"
-          checked={isEvenCheck}
-          onChange={toggleEvenCheck}
-        />
-      </Modal.Footer>
-    </Modal>
+    <>
+      <Modal show={open} onHide={onClose} backdrop="static">
+        <Modal.Body>
+          <ModalButtons
+            onClickFirstButton={onClickFirstButton}
+            onClickSecondButton={onClickSecondButton}
+            onClickThirdButton={onClickThirdButton}
+          />
+          <div className={styles.container}>
+            {contactsRedux.pending ? (
+              <Spinner animation="border" />
+            ) : (
+              <ListGroup id="listGroup" className={styles.body}>
+                <InfiniteScroll
+                  scrollableTarget="listGroup"
+                  dataLength={contactsRedux.contacts.length}
+                  loader={
+                    contactsRedux.pendingMore ? (
+                      <div className={styles.spinnerContainer}>
+                        <Spinner animation="border" />
+                      </div>
+                    ) : null
+                  }
+                  hasMore={contactsRedux.contacts.length < contactsRedux.pagination.maxItems}
+                  next={fetchMoreContacts}
+                  style={{ overflow: false }}
+                >
+                  {listItems}
+                </InfiniteScroll>
+              </ListGroup>
+            )}
+          </div>
+        </Modal.Body>
+        <Modal.Footer className={styles.footer}>
+          <Form.Check
+            disabled={contactsRedux.pending || contactsRedux.pendingMore}
+            type="checkbox"
+            label="Only even"
+            checked={isEvenCheck}
+            onChange={toggleEvenCheck}
+          />
+        </Modal.Footer>
+      </Modal>
+      {isContactModalOpen && (
+        <Modal show={isContactModalOpen} onHide={closeContactModal} backdrop="static">
+          <Modal.Header closeButton>Contact Info</Modal.Header>
+          <Modal.Body className={styles.contactModal}>
+            Color: {contactsRedux.contacts[contactIndex].color} Phone number:{' '}
+            {contactsRedux.contacts[contactIndex].phone_number}
+          </Modal.Body>
+        </Modal>
+      )}
+    </>
   );
 };
 
