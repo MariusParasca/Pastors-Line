@@ -1,49 +1,53 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, ListGroup } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import ModalContacts from 'components/ModalContacts/ModalContacts';
-import ModalButtons from 'components/ModalButtons/ModalButtons';
-import { useDispatch, useSelector } from 'react-redux';
-import { FETCH_CONTACTS_SEND } from 'store/actionTypes/contacts';
+import { useDispatch } from 'react-redux';
+import { FETCH_CONTACTS_SEND, RESET_CONTACTS } from 'store/actionTypes/contacts';
 import styles from './Main.module.css';
 
 const Main = () => {
   const [isModalAOpen, setIsModalAOpen] = useState(false);
   const [isModalBOpen, setIsModalBOpen] = useState(false);
+  const [queryParams, setQueryParams] = useState({});
 
   const dispatch = useDispatch();
-  const contactsRedux = useSelector((state) => state.contacts);
 
   const toggleIsModalOpen = useCallback((setState, state) => () => setState(!state), []);
 
   const closeModalAOpenB = useCallback(() => {
     setIsModalAOpen(false);
     setIsModalBOpen(true);
-  }, []);
+    dispatch({ type: RESET_CONTACTS });
+  }, [dispatch]);
 
   const closeModalBOpenA = useCallback(() => {
     setIsModalAOpen(true);
     setIsModalBOpen(false);
-  }, []);
+    dispatch({ type: RESET_CONTACTS });
+  }, [dispatch]);
 
   const closeAllModals = useCallback(() => {
     setIsModalAOpen(false);
     setIsModalBOpen(false);
-  }, []);
+    dispatch({ type: RESET_CONTACTS });
+  }, [dispatch]);
 
   useEffect(() => {
     if (isModalAOpen) {
-      dispatch({ type: FETCH_CONTACTS_SEND, queryParams: { companyId: 171 } });
+      const query = { companyId: 171 };
+      setQueryParams(query);
+      dispatch({ type: FETCH_CONTACTS_SEND, queryParams: query });
     }
   }, [dispatch, isModalAOpen]);
 
   useEffect(() => {
     if (isModalBOpen) {
-      dispatch({ type: FETCH_CONTACTS_SEND, queryParams: { companyId: 171, countryId: 226 } });
+      const query = { companyId: 171, countryId: 226 };
+      setQueryParams(query);
+      dispatch({ type: FETCH_CONTACTS_SEND, queryParams: query });
     }
   }, [dispatch, isModalBOpen]);
-
-  console.log('contactsRedux', contactsRedux);
 
   return (
     <>
@@ -66,6 +70,7 @@ const Main = () => {
           onClickFirstButton={closeModalBOpenA}
           onClickSecondButton={closeModalAOpenB}
           onClickThirdButton={closeAllModals}
+          queryParams={queryParams}
         />
         <ModalContacts
           kye="UsContacts"
@@ -74,6 +79,7 @@ const Main = () => {
           onClickFirstButton={closeModalBOpenA}
           onClickSecondButton={closeModalAOpenB}
           onClickThirdButton={closeAllModals}
+          queryParams={queryParams}
         />
       </div>
     </>

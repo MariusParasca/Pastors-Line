@@ -2,31 +2,28 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, ListGroup, Modal, Spinner } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 import ModalButtons from 'components/ModalButtons/ModalButtons';
+import { FETCH_MORE_CONTACTS_SEND } from 'store/actionTypes/contacts';
 import styles from './ModalContacts.module.css';
 
 const getListItems = (contacts, isEven) => {
   const items = [];
-  for (const property in contacts) {
-    if (
-      Object.prototype.hasOwnProperty.call(contacts, property) &&
-      (contacts[property].first_name || contacts[property].last_name)
-    ) {
-      if (isEven && Number(property) % 2 === 0) {
-        items.push(
-          <ListGroup.Item key={property}>
-            {contacts[property].first_name} {contacts[property].last_name}
-          </ListGroup.Item>,
-        );
-      } else if (!isEven) {
-        items.push(
-          <ListGroup.Item>
-            {contacts[property].first_name} {contacts[property].last_name}
-          </ListGroup.Item>,
-        );
-      }
+  for (const contact of contacts) {
+    if (isEven && Number(contact.id) % 2 === 0 && (contact.last_name || contact.first_name)) {
+      items.push(
+        <ListGroup.Item key={contact.id}>
+          {contact.first_name} {contact.last_name}
+        </ListGroup.Item>,
+      );
+    } else if (!isEven && (contact.last_name || contact.first_name)) {
+      items.push(
+        <ListGroup.Item key={contact.id}>
+          {contact.first_name} {contact.last_name}
+        </ListGroup.Item>,
+      );
     }
   }
 
@@ -34,12 +31,13 @@ const getListItems = (contacts, isEven) => {
 };
 
 const ModalContainer = (props) => {
-  const { open, onClose, onClickFirstButton, onClickSecondButton, onClickThirdButton } = props;
+  const { open, onClose, onClickFirstButton, onClickSecondButton, onClickThirdButton, queryParams } = props;
 
   const [isEvenCheck, setIsEvenCheck] = useState(false);
   const [listItems, setListItems] = useState([]);
 
   const contactsRedux = useSelector((state) => state.contacts);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setListItems(getListItems(contactsRedux.contacts, isEvenCheck));
@@ -48,6 +46,13 @@ const ModalContainer = (props) => {
   const toggleEvenCheck = useCallback(() => {
     setIsEvenCheck(!isEvenCheck);
   }, [isEvenCheck]);
+
+  const fetchMoreContacts = useCallback(() => {
+    dispatch({
+      type: FETCH_MORE_CONTACTS_SEND,
+      queryParams: { ...queryParams, page: contactsRedux.pagination.page + 1 },
+    });
+  }, [contactsRedux.pagination.page, dispatch, queryParams]);
 
   return (
     <Modal show={open} onHide={onClose} backdrop="static">
@@ -59,13 +64,26 @@ const ModalContainer = (props) => {
         />
         <div className={styles.container}>
           {contactsRedux.pending ? (
-            <div>
-              <Spinner animation="border" />
-            </div>
+            <Spinner animation="border" />
           ) : (
-            <div className={styles.body}>
-              <ListGroup>{listItems}</ListGroup>
-            </div>
+            <ListGroup id="listGroup" className={styles.body}>
+              <InfiniteScroll
+                scrollableTarget="listGroup"
+                dataLength={contactsRedux.contacts.length}
+                loader={
+                  contactsRedux.pendingMore ? (
+                    <div className={styles.spinnerContainer}>
+                      <Spinner animation="border" />
+                    </div>
+                  ) : null
+                }
+                hasMore={contactsRedux.contacts.length < contactsRedux.pagination.maxItems}
+                next={fetchMoreContacts}
+                style={{ overflow: false }}
+              >
+                {listItems}
+              </InfiniteScroll>
+            </ListGroup>
           )}
         </div>
       </Modal.Body>
@@ -88,6 +106,7 @@ ModalContainer.propTypes = {
   onClickFirstButton: PropTypes.func.isRequired,
   onClickSecondButton: PropTypes.func.isRequired,
   onClickThirdButton: PropTypes.func.isRequired,
+  queryParams: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default ModalContainer;

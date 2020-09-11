@@ -14,3 +14,10 @@
   overflow: auto;
   width: 100%;
 }
+
+.spinnerContainer {
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
