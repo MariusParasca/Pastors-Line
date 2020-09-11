@@ -8,7 +8,7 @@ const ModalContainer = (props) => {
   const { open, onClose, children } = props;
 
   return (
-    <Modal show={open} onHide={onClose} backdrop="static" keyboard={false}>
+    <Modal show={open} onHide={onClose} backdrop="static">
       <Modal.Body>{children}</Modal.Body>
       <Modal.Footer className={styles.footer}>
         <Form.Check type="checkbox" label="Only even" />
