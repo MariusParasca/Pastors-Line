@@ -4,7 +4,9 @@ import { Button } from 'react-bootstrap';
 import ModalContacts from 'components/ModalContacts/ModalContacts';
 import { useDispatch } from 'react-redux';
 import { FETCH_CONTACTS_SEND, RESET_CONTACTS } from 'store/actionTypes/contacts';
-import styles from './Main.module.css';
+import { NavLink, Route, Switch } from 'react-router-dom';
+import { PageRoute } from 'utils/routes';
+import './Main.scss';
 
 // I didn't changed the URL on modal openings because I do not see the logic in it...
 /// If I could get the opportunity to answer questions
@@ -58,36 +60,41 @@ const Main = () => {
 
   return (
     <>
-      <div className={styles.container}>
-        <Button
-          className={styles.firstButton}
-          variant="primary"
-          size="lg"
-          onClick={toggleIsModalOpen(setIsModalAOpen, isModalAOpen)}
-        >
-          Button A
-        </Button>
-        <Button variant="secondary" size="lg" onClick={toggleIsModalOpen(setIsModalBOpen, isModalBOpen)}>
-          Button B
-        </Button>
-        <ModalContacts
-          key="allContacts"
-          open={isModalAOpen}
-          onClose={closeAllModals}
-          onClickFirstButton={closeModalBOpenA}
-          onClickSecondButton={closeModalAOpenB}
-          onClickThirdButton={closeAllModals}
-          queryParams={queryParams}
-        />
-        <ModalContacts
-          kye="UsContacts"
-          open={isModalBOpen}
-          onClose={closeAllModals}
-          onClickFirstButton={closeModalBOpenA}
-          onClickSecondButton={closeModalAOpenB}
-          onClickThirdButton={closeAllModals}
-          queryParams={queryParams}
-        />
+      <div className="Main-container">
+        <NavLink to={PageRoute.modalA} onClick={toggleIsModalOpen(setIsModalAOpen, isModalAOpen)}>
+          <Button className="Main-firstButton" size="lg">
+            Button A
+          </Button>
+        </NavLink>
+        <NavLink to={PageRoute.modalB} onClick={toggleIsModalOpen(setIsModalBOpen, isModalBOpen)}>
+          <Button className="Main-secondButton" size="lg">
+            Button B
+          </Button>
+        </NavLink>
+        <Switch>
+          <Route exact path={PageRoute.modalA}>
+            <ModalContacts
+              key="allContacts"
+              open={isModalAOpen}
+              onClose={closeAllModals}
+              onClickFirstButton={closeModalBOpenA}
+              onClickSecondButton={closeModalAOpenB}
+              onClickThirdButton={closeAllModals}
+              queryParams={queryParams}
+            />
+          </Route>
+          <Route exact path={PageRoute.modalB}>
+            <ModalContacts
+              kye="UsContacts"
+              open={isModalBOpen}
+              onClose={closeAllModals}
+              onClickFirstButton={closeModalBOpenA}
+              onClickSecondButton={closeModalAOpenB}
+              onClickThirdButton={closeAllModals}
+              queryParams={queryParams}
+            />
+          </Route>
+        </Switch>
       </div>
     </>
   );

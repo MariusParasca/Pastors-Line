@@ -1,0 +1,30 @@
+@import '../../scss/variables.scss';
+
+.Main-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .Main-firstButton {
+    margin-right: 20px;
+    background-color: $buttonAColor;
+    border-color: $buttonAColor;
+  }
+
+  .Main-firstButton:hover {
+    background-color: $buttonAColorHover;
+    border-color: $buttonAColorHover;
+  }
+
+  .Main-secondButton {
+    background-color: $buttonBColor;
+    border-color: $buttonBColor;
+  }
+
+  .Main-secondButton:hover {
+    background-color: $buttonBColorHover;
+    border-color: $buttonBColorHover;
+  }
+}

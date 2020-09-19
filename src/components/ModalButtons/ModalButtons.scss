@@ -1,0 +1,38 @@
+@import '../../scss/variables.scss';
+
+.ModalButtons-container {
+  display: flex;
+  justify-content: space-between;
+
+  .ModalButtons-allContacts {
+    background-color: $buttonAColor;
+    border-color: $buttonAColor;
+  }
+
+  .ModalButtons-allContacts:hover {
+    background-color: $buttonAColorHover;
+    border-color: $buttonAColorHover;
+  }
+
+  .ModalButtons-usContacts {
+    background-color: $buttonBColor;
+    border-color: $buttonBColor;
+  }
+
+  .ModalButtons-usContacts:hover {
+    background-color: $buttonBColorHover;
+    border-color: $buttonBColorHover;
+  }
+
+  .ModalButtons-closeButton {
+    background: #fff;
+    border: 2px solid $buttonAColor;
+    color: $buttonAColor;
+  }
+
+  .ModalButtons-closeButton:hover {
+    border: 2px solid $buttonAColorHover;
+    background: #fff;
+    color: $buttonAColorHover;
+  }
+}

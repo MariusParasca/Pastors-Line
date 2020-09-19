@@ -1,23 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 
-import styles from './ModalButtons.module.css';
+import { PageRoute } from 'utils/routes';
+import './ModalButtons.scss';
 
 const ModalButtons = (props) => {
   const { onClickFirstButton, onClickSecondButton, onClickThirdButton } = props;
 
   return (
-    <div className={styles.container}>
-      <Button variant="primary" size="lg" onClick={onClickFirstButton}>
-        All Contacts
-      </Button>
-      <Button variant="secondary" size="lg" onClick={onClickSecondButton}>
-        US Contacts
-      </Button>
-      <Button className={styles.closeButton} size="lg" onClick={onClickThirdButton}>
-        Close
-      </Button>
+    <div className="ModalButtons-container">
+      <NavLink to={PageRoute.modalA} onClick={onClickFirstButton}>
+        <Button className="ModalButtons-allContacts" size="lg">
+          All Contacts
+        </Button>
+      </NavLink>
+      <NavLink to={PageRoute.modalB} onClick={onClickSecondButton}>
+        <Button className="ModalButtons-usContacts" size="lg">
+          US Contacts
+        </Button>
+      </NavLink>
+      <NavLink to={PageRoute.home}>
+        <Button className="ModalButtons-closeButton" size="lg" onClick={onClickThirdButton}>
+          Close
+        </Button>
+      </NavLink>
     </div>
   );
 };

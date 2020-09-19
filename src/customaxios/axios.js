@@ -1,13 +1,10 @@
 import axios from 'axios';
 
-const customAxios = axios.create({ baseURL: 'https://api.dev.pastorsline.com/api' });
-
-const ACCESS_TOKEN =
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNzEiLCJleHAiOjE2MDM3ODM0Mzd9.3ievseHtX0t3roGh7nBuNsiaQeSjfiHWyyx_5GlOLXk';
+const customAxios = axios.create({ baseURL: process.env.REACT_APP_API });
 
 customAxios.interceptors.request.use((config) => {
   const headers = {
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
+    Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
   };
 
   return {

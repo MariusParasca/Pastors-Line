@@ -1,0 +1,39 @@
+.ModalContainer-footer {
+  justify-content: flex-start;
+}
+
+.ModalContainer-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  .ModalContainer-body {
+    max-height: 400px;
+    min-height: 400px;
+    overflow: auto;
+    width: 100%;
+
+    .ModalContainer-spinnerContainer {
+      width: 100%;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+.ModalContainer-contactModal {
+  height: 560px;
+}
+
+.ModalContainer-listItem {
+  cursor: pointer;
+}
+
+.ModalContainer-listItem:hover {
+  background: #f1f1f1;
+}
+
+.ModalContainer-searchContainer {
+  margin-top: 20px;
+}
