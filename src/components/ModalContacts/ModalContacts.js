@@ -8,44 +8,31 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import ModalButtons from 'components/ModalButtons/ModalButtons';
 import { FETCH_CONTACTS_SEND, FETCH_MORE_CONTACTS_SEND } from 'store/actionTypes/contacts';
 import './ModalContacts.scss';
+import { contactsSelector, contactsReduxSelector, contactsEvenIdSelector } from 'store/selectors/contacts';
 
 const getItemInfo = (contact) => {
   return `${contact.first_name || 'Unknown First Name'} ${contact.last_name || 'Unknown Last Name'}`;
 };
 
-const getListItems = (contactsIds, contacts, isEven, onClick) => {
-  const items = [];
-  for (let i = 0; i < contactsIds.length; i += 1) {
-    const contact = contacts[contactsIds[i]];
-
-    if (isEven && Number(contact.id) % 2 === 0) {
-      items.push(
-        <ListGroup.Item key={contact.id} onClick={onClick(i)} className="ModalContainer-listItem">
-          {getItemInfo(contact)}
-        </ListGroup.Item>,
-      );
-    } else if (!isEven) {
-      items.push(
-        <ListGroup.Item key={contact.id} onClick={onClick(i)} className="ModalContainer-listItem">
-          {getItemInfo(contact)}
-        </ListGroup.Item>,
-      );
-    }
-  }
-
-  return items;
-};
+const getListItems = (contacts, onClick) =>
+  contacts.map((contact, index) => (
+    <ListGroup.Item key={contact.id} onClick={onClick(index)} className="ModalContainer-listItem">
+      {getItemInfo(contact)}
+    </ListGroup.Item>
+  ));
 
 const ModalContainer = (props) => {
   const { open, onClose, onClickFirstButton, onClickSecondButton, onClickThirdButton, queryParams } = props;
 
   const [isEvenCheck, setIsEvenCheck] = useState(false);
-  const [listItems, setListItems] = useState([]);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [contactIndex, setContactIndex] = useState(0);
   const [searchValue, setSearchValue] = useState('');
 
-  const contactsRedux = useSelector((state) => state.contacts);
+  const contactsRedux = useSelector(contactsReduxSelector);
+  const contacts = useSelector(contactsSelector);
+  const contactsEvenId = useSelector(contactsEvenIdSelector);
+
   const dispatch = useDispatch();
 
   const onClickContact = useCallback(
@@ -55,10 +42,6 @@ const ModalContainer = (props) => {
     },
     [],
   );
-
-  useEffect(() => {
-    setListItems(getListItems(contactsRedux.contactsIds, contactsRedux.contacts, isEvenCheck, onClickContact));
-  }, [contactsRedux.contacts, contactsRedux.contactsIds, isEvenCheck, onClickContact]);
 
   const toggleEvenCheck = useCallback(() => {
     setIsEvenCheck(!isEvenCheck);
@@ -143,7 +126,7 @@ const ModalContainer = (props) => {
                   next={fetchMoreContacts}
                   style={{ overflow: false }}
                 >
-                  {listItems}
+                  {getListItems(isEvenCheck ? contactsEvenId : contacts, onClickContact)}
                 </InfiniteScroll>
               </ListGroup>
             )}
