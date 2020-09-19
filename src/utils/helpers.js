@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import customAxios from 'customaxios/axios';
 
 export async function fetchFromAPI(url, options = { queryParams: {} }) {

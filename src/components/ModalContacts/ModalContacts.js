@@ -9,21 +9,25 @@ import ModalButtons from 'components/ModalButtons/ModalButtons';
 import { FETCH_CONTACTS_SEND, FETCH_MORE_CONTACTS_SEND } from 'store/actionTypes/contacts';
 import styles from './ModalContacts.module.css';
 
+const getItemInfo = (contact) => {
+  return `${contact.first_name || 'Unknown First Name'} ${contact.last_name || 'Unknown Last Name'}`;
+};
+
 const getListItems = (contactsIds, contacts, isEven, onClick) => {
   const items = [];
   for (let i = 0; i < contactsIds.length; i += 1) {
     const contact = contacts[contactsIds[i]];
 
-    if (isEven && Number(contact.id) % 2 === 0 && (contact.last_name || contact.first_name)) {
+    if (isEven && Number(contact.id) % 2 === 0) {
       items.push(
         <ListGroup.Item key={contact.id} onClick={onClick(i)} className={styles.listItem}>
-          {contact.first_name} {contact.last_name}
+          {getItemInfo(contact)}
         </ListGroup.Item>,
       );
-    } else if (!isEven && (contact.last_name || contact.first_name)) {
+    } else if (!isEven) {
       items.push(
         <ListGroup.Item key={contact.id} onClick={onClick(i)} className={styles.listItem}>
-          {contact.first_name} {contact.last_name}
+          {getItemInfo(contact)}
         </ListGroup.Item>,
       );
     }

@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 
+import { PageRoute } from 'utils/routes';
 import styles from './ModalButtons.module.css';
 
 const ModalButtons = (props) => {
@@ -9,15 +11,21 @@ const ModalButtons = (props) => {
 
   return (
     <div className={styles.container}>
-      <Button variant="primary" size="lg" onClick={onClickFirstButton}>
-        All Contacts
-      </Button>
-      <Button variant="secondary" size="lg" onClick={onClickSecondButton}>
-        US Contacts
-      </Button>
-      <Button className={styles.closeButton} size="lg" onClick={onClickThirdButton}>
-        Close
-      </Button>
+      <NavLink to={PageRoute.modalA} onClick={onClickFirstButton}>
+        <Button variant="primary" size="lg">
+          All Contacts
+        </Button>
+      </NavLink>
+      <NavLink to={PageRoute.modalB} onClick={onClickSecondButton}>
+        <Button variant="secondary" size="lg">
+          US Contacts
+        </Button>
+      </NavLink>
+      <NavLink to={PageRoute.home}>
+        <Button className={styles.closeButton} size="lg" onClick={onClickThirdButton}>
+          Close
+        </Button>
+      </NavLink>
     </div>
   );
 };
