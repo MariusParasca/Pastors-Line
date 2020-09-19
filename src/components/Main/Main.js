@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { FETCH_CONTACTS_SEND, RESET_CONTACTS } from 'store/actionTypes/contacts';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import { PageRoute } from 'utils/routes';
-import styles from './Main.module.css';
+import './Main.scss';
 
 // I didn't changed the URL on modal openings because I do not see the logic in it...
 /// If I could get the opportunity to answer questions
@@ -60,14 +60,14 @@ const Main = () => {
 
   return (
     <>
-      <div className={styles.container}>
+      <div className="Main-container">
         <NavLink to={PageRoute.modalA} onClick={toggleIsModalOpen(setIsModalAOpen, isModalAOpen)}>
-          <Button className={styles.firstButton} variant="primary" size="lg">
+          <Button className="Main-firstButton" size="lg">
             Button A
           </Button>
         </NavLink>
         <NavLink to={PageRoute.modalB} onClick={toggleIsModalOpen(setIsModalBOpen, isModalBOpen)}>
-          <Button variant="secondary" size="lg">
+          <Button className="Main-secondButton" size="lg">
             Button B
           </Button>
         </NavLink>

@@ -7,7 +7,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 import ModalButtons from 'components/ModalButtons/ModalButtons';
 import { FETCH_CONTACTS_SEND, FETCH_MORE_CONTACTS_SEND } from 'store/actionTypes/contacts';
-import styles from './ModalContacts.module.css';
+import './ModalContacts.scss';
 
 const getItemInfo = (contact) => {
   return `${contact.first_name || 'Unknown First Name'} ${contact.last_name || 'Unknown Last Name'}`;
@@ -20,13 +20,13 @@ const getListItems = (contactsIds, contacts, isEven, onClick) => {
 
     if (isEven && Number(contact.id) % 2 === 0) {
       items.push(
-        <ListGroup.Item key={contact.id} onClick={onClick(i)} className={styles.listItem}>
+        <ListGroup.Item key={contact.id} onClick={onClick(i)} className="ModalContainer-listItem">
           {getItemInfo(contact)}
         </ListGroup.Item>,
       );
     } else if (!isEven) {
       items.push(
-        <ListGroup.Item key={contact.id} onClick={onClick(i)} className={styles.listItem}>
+        <ListGroup.Item key={contact.id} onClick={onClick(i)} className="ModalContainer-listItem">
           {getItemInfo(contact)}
         </ListGroup.Item>,
       );
@@ -110,7 +110,7 @@ const ModalContainer = (props) => {
             onClickSecondButton={onClickSecondButton}
             onClickThirdButton={onClickThirdButton}
           />
-          <div className={styles.searchContainer}>
+          <div className="ModalContainer-searchContainer">
             <InputGroup size="sm" className="mb-3">
               <InputGroup.Prepend>
                 <InputGroup.Text id="inputGroup-sizing-sm">Search</InputGroup.Text>
@@ -124,17 +124,17 @@ const ModalContainer = (props) => {
               />
             </InputGroup>
           </div>
-          <div className={styles.container}>
+          <div className="ModalContainer-container">
             {contactsRedux.pending ? (
               <Spinner animation="border" />
             ) : (
-              <ListGroup id="listGroup" className={styles.body}>
+              <ListGroup id="listGroup" className="ModalContainer-body">
                 <InfiniteScroll
                   scrollableTarget="listGroup"
                   dataLength={contactsRedux.contactsIds.length}
                   loader={
                     contactsRedux.pendingMore ? (
-                      <div className={styles.spinnerContainer}>
+                      <div className="ModalContainer-spinnerContainer">
                         <Spinner animation="border" />
                       </div>
                     ) : null
@@ -149,7 +149,7 @@ const ModalContainer = (props) => {
             )}
           </div>
         </Modal.Body>
-        <Modal.Footer className={styles.footer}>
+        <Modal.Footer className="ModalContainer-footer">
           <Form.Check
             disabled={contactsRedux.pending || contactsRedux.pendingMore}
             type="checkbox"
@@ -162,7 +162,7 @@ const ModalContainer = (props) => {
       {isContactModalOpen && (
         <Modal show={isContactModalOpen} onHide={closeContactModal} backdrop="static">
           <Modal.Header closeButton>Contact Info</Modal.Header>
-          <Modal.Body className={styles.contactModal}>
+          <Modal.Body className="ModalContainer-contactModal">
             Color: {contactsRedux.contacts[contactsRedux.contactsIds[contactIndex]].color} Phone number:{' '}
             {contactsRedux.contacts[contactsRedux.contactsIds[contactIndex]].phone_number}
           </Modal.Body>
